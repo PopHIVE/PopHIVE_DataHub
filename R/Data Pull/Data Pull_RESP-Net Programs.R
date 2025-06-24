@@ -49,7 +49,7 @@ url_resp_net <- "https://data.cdc.gov/resource/kvib-3txy.csv"
 
 cdc_respnet <- runIfExpired(sourceName = "resp-net", storeIn = "RESP-NET Programs", 
                             f = ~ read.socrata(url_resp_net),
-                            fileType = "parquet", tolerance = (24*7))
+                            fileType = "parquet", tolerance = (24*3))
 
 
 

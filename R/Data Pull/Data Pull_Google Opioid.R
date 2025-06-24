@@ -60,7 +60,7 @@ download.file(url2, temp_file2, mode = "wb")
 
 google_naloxone <- runIfExpired(sourceName = "google_naloxone", storeIn = "Google Naloxone", 
                                f = ~ read_parquet(temp_file2),
-                               fileType = "parquet", tolerance = (24*7))
+                               fileType = "parquet", tolerance = (24*3))
 
 
 g1_naloxone <- google_naloxone %>%

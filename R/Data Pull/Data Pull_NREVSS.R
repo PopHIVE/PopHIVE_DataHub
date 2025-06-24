@@ -47,7 +47,7 @@ url_nrevss_rsv <- "https://data.cdc.gov/resource/3cxc-4k8q.csv"
 
 cdc_nrevss_rsv <- runIfExpired(sourceName = "nrevss_rsv", storeIn = "NREVSS", 
                                f = ~ read.socrata(url_nrevss_rsv),
-                               fileType = "parquet", tolerance = (24*7))
+                               fileType = "parquet", tolerance = (24*3))
 
 
 key <- readRDS('./Data/other_data/hhs_regions.rds')
