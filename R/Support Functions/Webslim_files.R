@@ -442,8 +442,8 @@ vax_age <- read_parquet(
     Vaccine_dose = gsub('NA', '', Vaccine_dose),
     Vaccine_dose = trimws(Vaccine_dose)
   ) %>%
-  dplyr::select(Geography, birth_year, age, Vaccine_dose, Outcome_value1) %>%
-  rename(geography = Geography, vaccine = Vaccine_dose, value = Outcome_value1)
+  dplyr::select(Geography, birth_year, age, Vaccine_dose, Outcome_value1,Outcome_value1_lcl,Outcome_value1_ucl,samp_size_vax) %>%
+  rename(geography = Geography, vaccine = Vaccine_dose, value = Outcome_value1, value_lcl=Outcome_value1_lcl, value_ucl=Outcome_value1_ucl, sample_size=samp_size_vax)
 
 log_write(
   vax_age,
@@ -458,9 +458,11 @@ vax_urban <- read_parquet(
     dim1 = `Dimension Type`,
     urban = Dimension,
     vax_uptake = `Estimate (%)`,
-    samp_size_vax = `Sample Size`
+    sample_size = `Sample Size`,
+    ci=`95% CI (%)`
   ) %>%
   collect() %>%
+  separate(ci, into = c("value_lcl", "value_ucl"), sep = " to ", convert = TRUE) %>%
   mutate(
     Vaccine_dose = as.factor(paste(Vaccine, Dose)),
     Vaccine_dose = gsub('NA', '', Vaccine_dose),
@@ -474,9 +476,11 @@ vax_urban <- read_parquet(
     Dose,
     dim1,
     vax_uptake,
-    samp_size_vax,
+    sample_size,
     urban,
-    birth_year
+    birth_year,
+    value_lcl,
+    value_ucl
   ) %>%
   filter(
     Geography %in% c(state.name, 'District of Columbia', 'United States')
@@ -492,7 +496,7 @@ vax_urban <- read_parquet(
       labels = c('Rural', 'Smaller City', 'Larger City')
     )
   ) %>%
-  dplyr::select(Geography, urban, birth_year, Vaccine_dose, vax_uptake) %>%
+  dplyr::select(Geography, urban, birth_year, Vaccine_dose, vax_uptake, value_lcl,value_ucl,sample_size) %>%
   rename(geography = Geography, vaccine = Vaccine_dose, value = vax_uptake)
 
 log_write(
@@ -508,9 +512,11 @@ vax_insurance <- read_parquet(
     dim1 = `Dimension Type`,
     insurance = Dimension,
     vax_uptake = `Estimate (%)`,
-    samp_size_vax = `Sample Size`
+    sample_size = `Sample Size`,
+    ci=`95% CI (%)`
   ) %>%
   collect() %>%
+  separate(ci, into = c("value_lcl", "value_ucl"), sep = " to ", convert = TRUE) %>%
   mutate(Vaccine_dose = as.factor(paste(Vaccine, Dose))) %>%
   filter(birth_year == '2016-2019' & dim1 == 'Insurance Coverage') %>%
   dplyr::select(
@@ -519,9 +525,11 @@ vax_insurance <- read_parquet(
     Dose,
     dim1,
     vax_uptake,
-    samp_size_vax,
     insurance,
-    birth_year
+    birth_year,
+    sample_size,
+    value_lcl,
+    value_ucl
   ) %>%
   filter(
     Geography %in% c(state.name, 'District of Columbia', 'United States')
@@ -541,7 +549,7 @@ vax_insurance <- read_parquet(
     Vaccine_dose = trimws(Vaccine_dose)
     
   ) %>%
-  dplyr::select(Geography, insurance, birth_year, Vaccine_dose, vax_uptake) %>%
+  dplyr::select(Geography, insurance, birth_year, Vaccine_dose, vax_uptake, value_lcl, value_ucl, sample_size) %>%
   rename(geography = Geography, vaccine = Vaccine_dose, value = vax_uptake)
 
 log_write(
