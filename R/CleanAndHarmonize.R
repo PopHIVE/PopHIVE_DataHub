@@ -7,7 +7,9 @@ suppressPackageStartupMessages({
   library("MMWRweek")
   library("lubridate")
   library("RSocrata")
-})
+  library("tidyr")
+  
+  })
 
 "%!in%" <- function(x, y) !("%in%"(x, y))
 

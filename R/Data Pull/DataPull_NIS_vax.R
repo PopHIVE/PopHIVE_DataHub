@@ -6,10 +6,11 @@
 
 
 vax_age <- read_parquet('https://github.com/ysph-dsde/PopHIVE_DataHub/raw/refs/heads/main/Data/Pulled%20Data/vax/nis_peds_vax.parquet') %>%
-  rename(birth_year = `Birth Year/Birth Cohort`, dim1=`Dimension Type`, age=Dimension,vax_uptake=`Estimate (%)`, samp_size_vax=`Sample Size`) %>%
+  rename(birth_year = `Birth Year/Birth Cohort`, dim1=`Dimension Type`, age=Dimension,vax_uptake=`Estimate (%)`, 
+         samp_size_vax=`Sample Size`,ci=`95% CI (%)`) %>%
   collect() %>%
   #filter(birth_year==2021 & dim1=='Age') %>%
-  dplyr::select(Vaccine,Geography, Dose, dim1, vax_uptake,samp_size_vax, age,birth_year ) %>%
+  dplyr::select(Vaccine,Geography, Dose, dim1, vax_uptake,samp_size_vax,ci, age,birth_year ,) %>%
   filter(grepl('MMR',Vaccine)|grepl('Varicella',Vaccine)|  grepl('DTaP',Vaccine)|  grepl('Hep A',Vaccine)|  
      grepl('Hep B',Vaccine)| grepl('Hib',Vaccine)|  grepl('PCV',Vaccine) 
   ) %>%
@@ -28,7 +29,10 @@ vax_age <- read_parquet('https://github.com/ysph-dsde/PopHIVE_DataHub/raw/refs/h
          additional_strata1 = 'none',
          additional_strata_level = NA_character_,
          sex_strata = 'none',
-         sex_level = NA_character_) 
+         sex_level = NA_character_,
+) %>%
+  separate(ci, into = c("Outcome_value1_lcl", "Outcome_value1_ucl"), sep = " to ", convert = TRUE)
+
 
 write_parquet(vax_age, './Data/Plot Files/childhood_immunizations/vax_age_nis.parquet')
 write_csv(vax_age,    './Data/Plot Files/childhood_immunizations/vax_age_nis.csv')
