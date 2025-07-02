@@ -40,11 +40,11 @@ vax1 <- a1 %>%
                 N = population_sample_size,
                 value = coverage_estimate
         ) %>%
-        dplyr::select(year, geography, grade, N, vax, value, percent_surveyed)
+        dplyr::select(year, geography, grade, N, vax, value, percent_surveyed, survey_type)
 
 
 exemptions <- vax1 %>%
-        filter(grepl('Exemption', vax))
+        filter(grepl('exempt', tolower(vax)))
 
 write.csv(
         exemptions,
@@ -53,7 +53,7 @@ write.csv(
 
 
 vax2 <- vax1 %>%
-        filter(!grepl('exempt', vax)) %>%
+        filter(!grepl('exempt', tolower(vax))) %>%
         filter(!grepl('pac', vax))
 
 write.csv(

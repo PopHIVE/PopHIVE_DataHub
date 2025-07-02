@@ -595,18 +595,21 @@ vaxview <- read_parquet(
   './Data/Webslim/childhood_immunizations/state_kg_school_vax_view.parquet'
 ) %>%
   filter(vax == 'mmr' & year == '2023-24') %>%
-  rename(value_vaxview = value) %>%
-  dplyr::select(value_vaxview, geography) %>%
+  rename(value_vaxview = value,
+         vaxview_survey_type = survey_type) %>%
+  dplyr::select(value_vaxview, geography,vaxview_survey_type) %>%
   mutate(value_vaxview = as.numeric(value_vaxview))
 
 nis <- read_parquet(
   './Data/Webslim/childhood_immunizations/overall_rates.parquet'
 ) %>%
   filter(
-    vaccine == '≥1 Dose MMR ' & age == "35 Months" & birth_year == 2021
+    vaccine == '≥1 Dose MMR' & age == "35 Months" & birth_year == 2021
   ) %>%
-  rename(value_nis = value) %>%
-  dplyr::select(value_nis, geography)
+  rename(value_nis = value,
+         value_nis_lcl=value_lcl,
+         value_nis_ucl=value_ucl) %>%
+  dplyr::select(value_nis,value_nis_ucl,value_nis_lcl, geography)
 
 vax_epic <- read_parquet(
   './Data/Webslim/childhood_immunizations/mmr_rates_epic.parquet'
@@ -618,7 +621,7 @@ vax_epic <- read_parquet(
 vax_compare <- nis %>%
   full_join(vaxview, by = 'geography') %>%
   full_join(vax_epic, by = 'geography') %>%
-  dplyr::select(geography, value_nis, value_vaxview, value_epic)
+  dplyr::select(geography, value_nis, value_nis_ucl,value_nis_lcl,value_vaxview, value_epic,vaxview_survey_type)
 
 log_write(
   vax_compare,
