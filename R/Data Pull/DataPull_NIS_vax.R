@@ -12,7 +12,8 @@ vax_age <- read_parquet('https://github.com/ysph-dsde/PopHIVE_DataHub/raw/refs/h
   #filter(birth_year==2021 & dim1=='Age') %>%
   dplyr::select(Vaccine,Geography, Dose, dim1, vax_uptake,samp_size_vax,ci, age,birth_year ,) %>%
   filter(grepl('MMR',Vaccine)|grepl('Varicella',Vaccine)|  grepl('DTaP',Vaccine)|  grepl('Hep A',Vaccine)|  
-     grepl('Hep B',Vaccine)| grepl('Hib',Vaccine)|  grepl('PCV',Vaccine) 
+     grepl('Hep B',Vaccine)| grepl('Hib',Vaccine)|  grepl('PCV',Vaccine) |
+       grepl('Combined 7',Vaccine) |  grepl('Polio',Vaccine) | grepl('Rotavirus',Vaccine) 
   ) %>%
   rename(Outcome_value1=vax_uptake) %>%
   mutate(outcome_type='Percent immunized',
