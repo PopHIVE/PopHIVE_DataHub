@@ -6,14 +6,19 @@ vax_compare <- read_parquet( './Data/Webslim/childhood_immunizations/state_compa
   
 
 
-p1 <- ggplot(vax_compare,aes(x=value_nis, y=value_vaxview)) +
+p1 <- ggplot(vax_compare,aes(x=value_nis, y=value_vaxview, text=geography)) +
   geom_point() +
   geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed")+
   theme_classic() +
   ylim(75, 100)+
   xlim(75,100) +
+  geom_errorbar(aes(xmin=value_nis_lcl, xmax=value_nis_ucl), color='gray', alpha=0.5)+
+
   ggtitle('Comparison of uptake from NIS and SchoolVaxView')
 
+plotly::ggplotly(p1)
+
+p1 + facet_wrap(~vaxview_survey_type)
 
 p2 <- ggplot(vax_compare,aes(x=value_nis, y=value_epic)) +
   geom_point() +
@@ -21,7 +26,11 @@ p2 <- ggplot(vax_compare,aes(x=value_nis, y=value_epic)) +
   theme_classic() +
   ylim(75, 100)+
   xlim(75,100)+
+  geom_errorbar(aes(xmin=value_nis_lcl, xmax=value_nis_ucl), color='gray', alpha=0.5)+
   ggtitle('Comparison of uptake from NIS and Epic')
+
+p2 + facet_wrap(~vaxview_survey_type)
+
 
 p3 <- ggplot(vax_compare,aes(x=value_vaxview, y=value_epic)) +
   geom_point() +
@@ -30,6 +39,8 @@ p3 <- ggplot(vax_compare,aes(x=value_vaxview, y=value_epic)) +
   ylim(75, 100)+
   xlim(75,100)+
   ggtitle('Comparison of uptake from Epic and SchoolVaxView')
+
+p3 + facet_wrap(~vaxview_survey_type)
 
 p1+p2+p3
 
