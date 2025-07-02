@@ -462,6 +462,10 @@ vax_urban <- read_parquet(
     ci=`95% CI (%)`
   ) %>%
   collect() %>%
+  filter(grepl('MMR',Vaccine)|grepl('Varicella',Vaccine)|  grepl('DTaP',Vaccine)|  grepl('Hep A',Vaccine)|  
+           grepl('Hep B',Vaccine)| grepl('Hib',Vaccine)|  grepl('PCV',Vaccine) |
+           grepl('Combined 7',Vaccine) |  grepl('Polio',Vaccine) | grepl('Rotavirus',Vaccine) 
+  ) %>%
   separate(ci, into = c("value_lcl", "value_ucl"), sep = " to ", convert = TRUE) %>%
   mutate(
     Vaccine_dose = as.factor(paste(Vaccine, Dose)),
@@ -514,6 +518,10 @@ vax_insurance <- read_parquet(
     vax_uptake = `Estimate (%)`,
     sample_size = `Sample Size`,
     ci=`95% CI (%)`
+  ) %>%
+  filter(grepl('MMR',Vaccine)|grepl('Varicella',Vaccine)|  grepl('DTaP',Vaccine)|  grepl('Hep A',Vaccine)|  
+           grepl('Hep B',Vaccine)| grepl('Hib',Vaccine)|  grepl('PCV',Vaccine) |
+           grepl('Combined 7',Vaccine) |  grepl('Polio',Vaccine) | grepl('Rotavirus',Vaccine) 
   ) %>%
   collect() %>%
   separate(ci, into = c("value_lcl", "value_ucl"), sep = " to ", convert = TRUE) %>%
