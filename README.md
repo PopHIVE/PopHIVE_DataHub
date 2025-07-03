@@ -20,7 +20,8 @@ Time-stamped archives of the data are available in the Pulled Data folder.
 
 *Can I re-use the data from PopHIVE?*
 
-Yes! Much of the data are drawn from publicly available Federal datasets, obtained from CDC or data.gov. Other datasets, including the data extracted from Epic Cosmos or Google Health Trends, can be used with appropriate attribution. A suggested citation would be 'Data from Epic Cosmos were obtained from the PopHIVE platform [url for Github corresponding to the specific dataset]
+Yes!  Much of the data are drawn from publicly available Federal datasets obtained from CDC or data.gov.  Other data, including the results of research performed using Epic Cosmos or the data available through Google Health Trends, can be used with appropriate attribution.  A suggested citation relating to this data is 'Results of research performed with Epic Cosmos were obtained from the PopHIVE platform [url for Github corresponding to the specific data source].’
+
 
 ## Legal Disclaimer
 
