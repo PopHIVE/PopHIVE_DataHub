@@ -40,7 +40,9 @@ nrevss_rsv_ts <- read_csv(paste0(
   mutate(
     geography = gsub('NA,', '', geography),
     geography = gsub(',NA', '', geography)
-  )
+  ) %>%
+  mutate(source = 'CDC NREVSS') %>%
+  relocate(source)
 
 log_write(
   nrevss_rsv_ts,
@@ -142,7 +144,8 @@ rsv_county <- read_csv(paste0(
   base_dir,
   'Cosmos ED/rsv_flu_covid_county_filled_map_nssp.csv'
 )) %>%
-  dplyr::select(fips, week_end, percent_visits_rsv)
+  mutate(source = 'CDC NSSP') %>%
+  dplyr::select(source,fips, week_end, percent_visits_rsv) 
 
 log_write(
   rsv_county,
@@ -157,7 +160,10 @@ rsv_testing <- read_csv(paste0(
   rename(age=age_level,
          value=Outcome_value1,
          ) %>%
+  mutate( source = "Epic Cosmos, ED"
+        ) %>%
   dplyr::select(
+    source,
     age,
     date,
     value,
@@ -244,7 +250,9 @@ flu_county <- read_csv(paste0(
   base_dir,
   'Cosmos ED/rsv_flu_covid_county_filled_map_nssp.csv'
 )) %>%
-  dplyr::select(fips, week_end, percent_visits_flu)
+  mutate(source = 'CDC NSSP'
+         ) %>%
+  dplyr::select(source, fips, week_end, percent_visits_flu)
 
 log_write(
   flu_county,
@@ -328,7 +336,10 @@ covid_county <- read_csv(paste0(
   base_dir,
   'Cosmos ED/rsv_flu_covid_county_filled_map_nssp.csv'
 )) %>%
-  dplyr::select(fips, week_end, percent_visits_covid)
+  mutate( source = 'CDC NSSP'
+    
+  )%>%
+  dplyr::select(source, fips, week_end, percent_visits_covid)
 
 log_write(
   covid_county,
