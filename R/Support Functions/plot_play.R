@@ -20,7 +20,7 @@ plotly::ggplotly(p1)
 
 p1 + facet_wrap(~vaxview_survey_type)
 
-p2 <- ggplot(vax_compare,aes(x=value_nis, y=value_epic)) +
+p2 <- ggplot(vax_compare,aes(x=value_nis, y=value_epic, text=geography)) +
   geom_point() +
   geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed")+
   theme_classic() +

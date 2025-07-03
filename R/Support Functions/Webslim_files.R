@@ -616,6 +616,8 @@ vax_epic <- read_parquet(
 ) %>%
   rename(value_epic = value,
          N_patients_epic = N_patients) %>%
+  mutate(N_patients_epic = as.numeric(N_patients_epic)
+         ) %>%
   filter(age == '3-4 Years') %>%
   dplyr::select(value_epic, geography,N_patients_epic)
 
