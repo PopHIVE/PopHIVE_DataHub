@@ -22,6 +22,31 @@ Time-stamped archives of the data are available in the Pulled Data folder.
 
 Yes!  Much of the data are drawn from publicly available Federal datasets obtained from CDC or data.gov.  Other data, including the results of research performed using Epic Cosmos or the data available through Google Health Trends, can be used with appropriate attribution.  A suggested citation relating to this data is 'Results of research performed with Epic Cosmos were obtained from the PopHIVE platform [url for Github corresponding to the specific data source].’
 
+*Who is it for?*
+PopHIVE is designed for a broad audience:
+- Members of the public who want to understand what’s happening in their communities.
+- Clinicians who need to anticipate trends and adjust care.
+- Public health departments and local governments who need up-to-date data to allocate resources.
+- Researchers, journalists, and advocates working to tell stories and drive policy change.
+- Policy makers and decision-makers who need to understand the basics of who, what, and where about health issues occurring in the areas they serve. 
+
+*Can you show ZIP code-level data?*
+Because the data is de-identified, we can’t always go down to ZIP code level, especially for sensitive conditions like STIs or mental health outcomes. For some topics, like asthma or heat-related illness, we can show more granular data. Our data team is constantly working to expand local detail while protecting individual privacy.
+
+*Will you show additional conditions in the future?*
+Yes. PopHIVE is evolving based on user needs and feedback. As high-quality, de-identified data becomes available, we plan to expand condition-specific dashboards, such as those for diabetes, maternal health, and behavioral health. Please provide us feedback on what you’d like to see here.
+
+*How do I know the data is accurate or reliable?*
+PopHIVE’s data team continually evaluates the quality and representativeness of the data. In some cases (like diabetes Hemoglobin A1C data), completeness varies, and we are committed to transparency about what the data can and can’t tell us. This is an evolving platform, and we're building new functionality and insights over time.
+
+*How are you using electronic health record data from Epic? Isn’t that a violation of HIPAA?*
+PopHIVE doesn’t change any rules or regulations around health data sharing. We only use de-identified, aggregate data, following all existing privacy laws. We’re not sharing individual patient records—we’re simply making existing public health trends more timely and accessible for the public good.
+
+*Are you accepting additional data sets?*
+Yes! We welcome partnerships and are actively working to expand PopHIVE’s data offerings. If you have a reliable, de-identified dataset that could help improve public understanding of health, we’d love to hear from you. Please submit here. 
+
+*How can I give feedback on this tool?*
+We’d love to hear from you. PopHIVE is shaped by the people who use it. Whether you have a technical suggestion, want to request a feature, or share how it helped your community, please submit [here](https://docs.google.com/forms/d/e/1FAIpQLSchAasiq7ovCCNz9ussb7C2ntkZ-8Rjc7-tNSglkf5boS-A0w/viewform?pli=1). 
 
 ## Legal Disclaimer
 
