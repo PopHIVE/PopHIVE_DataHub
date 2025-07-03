@@ -45,6 +45,16 @@ p3 + facet_wrap(~vaxview_survey_type)
 p1+p2+p3
 
 
+p4 <- ggplot(vax_compare,aes(x=geography, y=value_epic)) +
+  geom_point() +
+  geom_point(aes(x=geography, y=value_vaxview), color='red')+
+  geom_point(aes(x=geography, y=value_nis), color='blue')+
+  geom_linerange(aes(x=geography,ymin=value_nis_lcl, ymax=value_nis_ucl), color='blue', alpha=0.1)+
+  
+    theme_classic() +
+  ylim(70, 100)+
+  ggtitle('Comparison of uptake from Epic and SchoolVaxView')
+p4
 
 #Trends in vaxview data
 
