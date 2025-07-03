@@ -614,14 +614,15 @@ nis <- read_parquet(
 vax_epic <- read_parquet(
   './Data/Webslim/childhood_immunizations/mmr_rates_epic.parquet'
 ) %>%
-  rename(value_epic = value) %>%
+  rename(value_epic = value,
+         N_patients_epic = N_patients) %>%
   filter(age == '3-4 Years') %>%
-  dplyr::select(value_epic, geography)
+  dplyr::select(value_epic, geography,N_patients_epic)
 
 vax_compare <- nis %>%
   full_join(vaxview, by = 'geography') %>%
   full_join(vax_epic, by = 'geography') %>%
-  dplyr::select(geography, value_nis, value_nis_ucl,value_nis_lcl,value_vaxview, value_epic,vaxview_survey_type)
+  dplyr::select(geography, value_nis, value_nis_ucl,value_nis_lcl,value_vaxview, value_epic,vaxview_survey_type,N_patients_epic)
 
 log_write(
   vax_compare,
