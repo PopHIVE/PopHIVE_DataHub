@@ -10,9 +10,9 @@ ds1 \<- read_parquet(url1)
 
 In general, the data closest to the source data are found in the 'value' column. Some datasets also include a 3 week moving average (value_smooth), and a smoothed value, scaled to between 0-100 (value_smooth_scale). The data in 'value' are generally drawn directly from the source data. Exceptions include:
 
-1) In some datasets where national level data were not provided by the source, a national average is calculated using a population-weighted average.
+1)  In some datasets where national level data were not provided by the source, a national average is calculated using a population-weighted average.
 
-2) For Epic Cosmos, if the data are based on fewer than 10 counts, the cell is suppressed. For visualization purposes, this is filled in with a value halfway between 0 and the minimum value reported for that state. These values are indicated with suppressed_flag=1.
+2)  For Epic Cosmos, if the data are based on fewer than 10 counts, the cell is suppressed. For visualization purposes, this is filled in with a value halfway between 0 and the minimum value reported for that state. These values are indicated with suppressed_flag=1.
 
 Time-stamped archives of the data are available in the Pulled Data folder.
 
