@@ -6,10 +6,13 @@
 diabetes <- open_dataset('./Data/Pulled Data/BRFSS/brfss_prevalence.parquet') %>%
   filter(class== "Chronic Health Indicators" & topic=='Diabetes') %>%
   filter(break_out_category %in% c( "Age Group",'Overall') & response=='Yes') %>%
-  dplyr::select(locationdesc,year, break_out,  data_value, sample_size) %>%
+  dplyr::select(locationdesc,year, break_out,  data_value, sample_size,confidence_limit_low,confidence_limit_high) %>%
   collect() %>%
   mutate(outcome_name='Diabetes') %>%
-  rename(age=break_out, value=data_value, geography=locationdesc) %>%
+  rename(age=break_out, value=data_value, 
+         value_lcl=confidence_limit_low,
+         value_ucl=confidence_limit_high,
+         geography=locationdesc) %>%
   mutate( age = if_else(age=='Overall', 'Total', paste(age, 'Years')),
           geography = if_else(geography=='All States and DC (median) **', 'United States', geography)) %>%
   filter(geography !='All States, DC and Territories (median) **')
@@ -22,11 +25,13 @@ diabetes <- open_dataset('./Data/Pulled Data/BRFSS/brfss_prevalence.parquet') %>
 obesity <- open_dataset('./Data/Pulled Data/BRFSS/brfss_prevalence.parquet') %>%
   filter(class== "Overweight and Obesity (BMI)" & topic=='BMI Categories') %>%
   filter(break_out_category %in% c( "Age Group",'Overall') & grepl('Obese', response)) %>%
-  dplyr::select(locationdesc,year, break_out,  data_value, sample_size) %>%
+  dplyr::select(locationdesc,year, break_out,  data_value, sample_size,confidence_limit_low, confidence_limit_high) %>%
   collect() %>%
   mutate(outcome_name='Obesity') %>%
-  rename(age=break_out, value=data_value, geography=locationdesc) %>%
-  mutate( age = if_else(age=='Overall', 'Total', paste(age, 'Years')),
+  rename(age=break_out, value=data_value, 
+         value_lcl=confidence_limit_low,
+         value_ucl=confidence_limit_high,
+         geography=locationdesc) %>%  mutate( age = if_else(age=='Overall', 'Total', paste(age, 'Years')),
           geography = if_else(geography=='All States and DC (median) **', 'United States', geography)) %>%
   filter(geography != 'All States, DC and Territories (median) **')
 
