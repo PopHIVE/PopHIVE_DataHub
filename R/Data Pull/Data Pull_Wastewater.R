@@ -43,11 +43,11 @@
 ## ----------------------------------------------------------------
 ## Wastewater for RSV
 
-url_ww_rsv <- "https://www.cdc.gov/wcms/vizdata/NCEZID_DIDRI/RSVStateLevelDownloadCSV.csv"
+url_ww_rsv <- "https://www.cdc.gov/wcms/vizdata/NCEZID_DIDRI/rsv/nwssrsvstateactivitylevel.csv"
 
 cdc_ww_rsv <- runIfExpired(sourceName = "nwss_rsv", storeIn = "NWSS", 
                            f = ~ read_csv(url_ww_rsv),
-                           fileType = "parquet", tolerance = (24*3))
+                           fileType = "parquet", tolerance = (24*7))
 
 
 ww1_rsv_harmonized <- cdc_ww_rsv%>%
@@ -82,7 +82,7 @@ ww1_rsv_harmonized <- cdc_ww_rsv%>%
 ## ----------------------------------------------------------------
 ## Wastewater for Flu A
 
-url_ww_flu <- "https://www.cdc.gov/wcms/vizdata/NCEZID_DIDRI/FluA/FluAStateMapDownloadCSV.csv"
+url_ww_flu <- "https://www.cdc.gov/wcms/vizdata/NCEZID_DIDRI/FluA/nwssfluastateactivitylevelDL.csv"
 
 cdc_ww_flu <- runIfExpired(sourceName = "nwss_flu-a", storeIn = "NWSS", 
                            f = ~ read_csv(url_ww_flu),
@@ -121,7 +121,7 @@ ww1_flu_harmonized <- cdc_ww_flu %>%
 ## ----------------------------------------------------------------
 ## Wastewater for COVID
 
-url_ww_covid <- "https://www.cdc.gov/wcms/vizdata/NCEZID_DIDRI/SC2StateLevelDownloadCSV.csv"
+url_ww_covid <- "https://www.cdc.gov/wcms/vizdata/NCEZID_DIDRI/SC2/nwsssc2stateactivitylevelDL.csv"
 
 cdc_ww_covid <- runIfExpired(sourceName = "nwss_covid", storeIn = "NWSS", 
                              f = ~ read_csv(url_ww_covid),
@@ -144,7 +144,7 @@ ww1_covid_harmonized <- cdc_ww_covid %>%
          date_resolution = 'week',
          update_frequency = 'weekly',
          source = 'CDC NWWS',
-         url = 'https://www.cdc.gov/wcms/vizdata/NCEZID_DIDRI/SC2StateLevelDownloadCSV.csv',
+         url = 'https://www.cdc.gov/wcms/vizdata/NCEZID_DIDRI/SC2/nwsssc2stateactivitylevelDL.csv"',
          geo_strata = 'state',
          age_strata = 'none',
          race_strata = 'none',
