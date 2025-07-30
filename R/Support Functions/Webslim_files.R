@@ -202,7 +202,10 @@ flu_all_indicators_state <- read_csv(paste0(
     value_smooth_scale = outcome_3m_scale
   ) %>%
   mutate(source = if_else(source == "Epic Cosmos", "Epic Cosmos, ED", source),
-         source = if_else(source == "CDC FluSurv-NET", 'CDC RespNET', source))
+         source = if_else(source == "CDC FluSurv-NET", 'CDC RespNET', source),
+         value = if_else(source=="Epic Cosmos, ED" & geography=='Alaska', NA_real_, value ),
+         value_smooth = if_else(source=="Epic Cosmos, ED" & geography=='Alaska', NA_real_, value_smooth )
+  )
 
 log_write(
   flu_all_indicators_state,
@@ -286,7 +289,11 @@ covid_all_indicators_state <- read_csv(paste0(
     value_smooth_scale = outcome_3m_scale
   ) %>%
   mutate(source = if_else(source == "Epic Cosmos", "Epic Cosmos, ED", source),
-         source = if_else(source== "CDC COVID-NET", 'CDC RespNET', source))
+         source = if_else(source== "CDC COVID-NET", 'CDC RespNET', source),
+         value = if_else(source=="Epic Cosmos, ED" & geography=='Alaska', NA_real_, value ),
+         value_smooth = if_else(source=="Epic Cosmos, ED" & geography=='Alaska', NA_real_, value_smooth )
+         
+         )
 
 log_write(
   covid_all_indicators_state,
