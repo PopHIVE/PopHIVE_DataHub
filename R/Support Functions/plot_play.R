@@ -45,17 +45,62 @@ p3 + facet_wrap(~vaxview_survey_type)
 p1+p2+p3
 
 
-p4 <- ggplot(vax_compare,aes(x=geography, y=value_epic)) +
-  geom_point() +
-  geom_point(aes(x=geography, y=value_vaxview), color='red')+
-  geom_point(aes(x=geography, y=value_nis), color='blue')+
-  geom_linerange(aes(x=geography,ymin=value_nis_lcl, ymax=value_nis_ucl), color='blue', alpha=0.1)+
-  
-    theme_classic() +
-  ylim(70, 100)+
-  ggtitle('Comparison of uptake from Epic and SchoolVaxView')
+# Add a small numeric offset for plotting
+vax_compare$geo_epic <- as.numeric(factor(vax_compare$geography)) - 0.2
+vax_compare$geo_vaxview <- as.numeric(factor(vax_compare$geography))
+vax_compare$geo_nis <- as.numeric(factor(vax_compare$geography)) + 0.2
+
+p4 <- ggplot() +
+  geom_point(data=vax_compare, aes(x=geo_epic, y=value_epic), color='black') +
+  geom_point(data=vax_compare, aes(x=geo_vaxview, y=value_vaxview), color='red') +
+  geom_point(data=vax_compare, aes(x=geo_nis, y=value_nis), color='blue') +
+  geom_linerange(data=vax_compare, aes(x=geo_nis, ymin=value_nis_lcl, ymax=value_nis_ucl), 
+                 color='blue', alpha=0.1) +
+  scale_x_continuous(
+    breaks=as.numeric(factor(vax_compare$geography)),
+    labels=levels(factor(vax_compare$geography))
+  ) +
+  theme_classic() +
+  ylim(70, 100) +
+  ggtitle('Comparison of uptake from Epic, NIS, SchoolVaxView') +
+  theme(axis.text.x = element_text(angle=45, hjust=1))
 p4
 
+vax_compare_m <- vax_compare %>%
+  dplyr::select(geography, starts_with('value')) %>%
+    reshape2::melt(., id.vars=c('geography')) %>%
+  filter(variable %in% c('value_nis','value_vaxview','value_epic')) %>%
+  mutate(variable = gsub('value_', '', variable))
+
+epic_ss <- vax_compare %>%
+  dplyr::select(geography,N_patients_epic) %>%
+  mutate(wgt = N_patients_epic/max(N_patients_epic, na.rm=T),
+         variable= 'epic') %>%
+  dplyr::select(geography, wgt, variable) 
+
+nis_wgt <- vax_compare %>%
+  mutate( nis_variance = ((value_nis_ucl - value_nis )/2)^2,
+          wgt = 1/nis_variance,
+          wgt = wgt/max(wgt, na.rm=T),
+          variable='nis'
+   ) %>%
+  dplyr::select(geography,wgt, variable)
+
+all_wgts <- bind_rows(epic_ss, nis_wgt)
+
+vax_compare_m %>%
+  mutate(variable = as.factor(variable)) %>%
+  left_join(all_wgts, by=c('geography','variable')) %>%
+  mutate(
+    wgt = if_else(variable == 'vaxview', 0.5, wgt),
+    jitter_x = as.numeric(as.factor(variable)) + runif(n(), -0.2, 0.2)  # jitter x values manually
+  ) %>%
+  ggplot() +
+  geom_line(aes(x = jitter_x, y = value, group = geography), color = 'gray') +
+  geom_point(aes(x = jitter_x, y = value, size = wgt), alpha=0.5) +
+  scale_x_continuous(breaks = 1:length(unique(vax_compare_m$variable)),
+                     labels = levels(as.factor(vax_compare_m$variable))) +
+  theme_classic()
 #Trends in vaxview data
 
 vaxview <- read_parquet('./Data/Webslim/childhood_immunizations/state_kg_school_vax_view.parquet') %>%
