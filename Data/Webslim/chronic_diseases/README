@@ -1,0 +1,3 @@
+## Note on these files: 
+During the transition time between the PopHIVE_DataHub and the new dcf() framework, some of the files generated in this directory
+were generated in this repository: https://github.com/PopHIVE/Ingest/
