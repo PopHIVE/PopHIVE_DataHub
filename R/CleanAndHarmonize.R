@@ -220,7 +220,10 @@ combined_file_rsv <- bind_rows(
   h1_harmonized_rsv,
   e1,
   g1_state_harmonized_v1,
-  g1_state_harmonized_v2
+  g1_state_harmonized_v2,
+  delphi_doctor_claims,
+  delphi_hosp_claims,
+  delphi_nhsn
 ) %>%
   filter(
     date >= as.Date('2023-07-01') &
@@ -231,6 +234,7 @@ combined_file_rsv <- bind_rows(
   group_by(geography, outcome_label1, source) %>%
   filter(date >= '2023-07-01') %>%
   mutate(
+    Outcome_value1 = if_else(is.na(Outcome_value1), min(Outcome_value1, na.rm=T)/2 ,Outcome_value1 ),
     outcome_3m = zoo::rollapplyr(
       Outcome_value1,
       3,
@@ -240,6 +244,7 @@ combined_file_rsv <- bind_rows(
     ),
     outcome_3m = if_else(is.nan(outcome_3m), NA, outcome_3m),
     outcome_3m = outcome_3m - min(outcome_3m, na.rm = T),
+    #outcome_3m = if_else(grepl('Delphi', source),value,outcome_3m), #Delphi data already smoothed
     outcome_3m_scale = outcome_3m / max(outcome_3m, na.rm = T) * 100,
     suppressed_flag = if_else(is.na(suppressed_flag), 0, suppressed_flag)
   )
@@ -350,17 +355,23 @@ combined_file_flu <- bind_rows(
   nssp_harmonized_flu,
   ww1_flu_harmonized,
   h1_harmonized_flu,
-  e1
+  e1,
+  delphi_doctor_claims,
+  delphi_hosp_claims,
+  delphi_nhsn
 ) %>%
+#  mutate(outcome_name = if_else(is.na(outcome_name),'FLU',outcome_name ))%>%
   filter(
     date >= as.Date('2023-07-01') &
       age_strata == 'none' &
-      !outcome_name %in% c('COVID', 'RSV')
+      !(outcome_name %in% c('COVID', 'RSV'))
   ) %>%
   arrange(geography, outcome_label1, source, date) %>%
   group_by(geography, outcome_label1, source) %>%
   filter(date >= '2023-07-01') %>%
   mutate(
+    Outcome_value1 = if_else(is.na(Outcome_value1), min(Outcome_value1, na.rm=T)/2 ,Outcome_value1 ),
+    
     outcome_3m = zoo::rollapplyr(
       Outcome_value1,
       3,
@@ -473,7 +484,10 @@ combined_file_covid <- bind_rows(
   nssp_harmonized_covid,
   ww1_covid_harmonized,
   h1_harmonized_covid,
-  e1
+  e1,
+  delphi_doctor_claims,
+  delphi_hosp_claims,
+  delphi_nhsn
 ) %>%
   filter(
     date >= as.Date('2023-07-01') &
@@ -484,6 +498,7 @@ combined_file_covid <- bind_rows(
   group_by(geography, outcome_label1, source) %>%
   filter(date >= '2023-07-01') %>%
   mutate(
+    Outcome_value1 = if_else(is.na(Outcome_value1), min(Outcome_value1, na.rm=T)/2 ,Outcome_value1 ),
     outcome_3m = zoo::rollapplyr(
       Outcome_value1,
       3,
@@ -593,7 +608,7 @@ write.csv(
 ##################################################################################################
 
 #################################################
-### State map NSSP for flu. RSV, COVID
+### County map NSSP for flu. RSV, COVID
 ################################################
 dates <- seq.Date(from = as.Date('2022-10-01'), to = Sys.Date(), by = 'week')
 
