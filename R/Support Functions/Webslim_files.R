@@ -55,6 +55,7 @@ rsv_all_indicators_state <- read_csv(paste0(
   base_dir,
   'Comparisons/rsv_combined_all_outcomes_state.csv'
 )) %>%
+  mutate(outcome_label1 = if_else(is.na(outcome_label1),'other',outcome_label1)) %>%
   filter(outcome_label1 != 'Google Searches 1') %>% #only keep definition #2 for google searches
   dplyr::select(
     geography,
@@ -83,6 +84,12 @@ log_write(
   './Data/Webslim/respiratory_diseases/rsv/overall_trends.parquet'
 )
 
+
+# p1 <- rsv_all_indicators_state %>%
+#   filter(geography=='New York') %>%
+#   ggplot(aes(x=date, y=value_smooth_scale, group=source, color=source)) +
+#   geom_line()
+# plotly::ggplotly(p1)
 
 ##RSV Cosmos age and RSV-Net by age
 epic_ed_combo_rsv <- read_csv(paste0(
@@ -186,6 +193,7 @@ flu_all_indicators_state <- read_csv(paste0(
   base_dir,
   'Comparisons/flu_combined_all_outcomes_state.csv'
 )) %>%
+  mutate(outcome_label1 = if_else(is.na(outcome_label1),'other',outcome_label1)) %>%
   filter(outcome_label1 != 'Google Searches 1') %>% #only keep definition #2 for google searches
   dplyr::select(
     geography,
@@ -211,7 +219,12 @@ log_write(
   flu_all_indicators_state,
   './Data/Webslim/respiratory_diseases/influenza/overall_trends.parquet'
 )
-
+# 
+# p1 <- flu_all_indicators_state %>%
+#   filter(geography=='New York') %>%
+#   ggplot(aes(x=date, y=value_smooth_scale, group=source, color=source)) +
+#   geom_line()
+# plotly::ggplotly(p1)
 
 ##flu Cosmos age
 epic_ed_combo_flu <- read_csv(paste0(
@@ -273,6 +286,7 @@ covid_all_indicators_state <- read_csv(paste0(
   base_dir,
   'Comparisons/covid_combined_all_outcomes_state.csv'
 )) %>%
+  mutate(outcome_label1 = if_else(is.na(outcome_label1),'other',outcome_label1)) %>%
   filter(outcome_label1 != 'Google Searches 1') %>% #only keep definition #2 for google searches
   dplyr::select(
     geography,
@@ -299,6 +313,12 @@ log_write(
   covid_all_indicators_state,
   './Data/Webslim/respiratory_diseases/covid/overall_trends.parquet'
 )
+# p1 <- covid_all_indicators_state %>%
+#   filter(geography=='New York') %>%
+#   ggplot(aes(x=date, y=value_smooth_scale, group=source, color=source)) +
+#   geom_line()
+# plotly::ggplotly(p1)
+
 
 
 ##covid Cosmos age
