@@ -310,7 +310,7 @@ national_popwgted_avg_rsv <- combined_file_rsv %>%
 combined_file_rsv_addavg <- combined_file_rsv %>%
   rbind(
     national_popwgted_avg_rsv %>%
-      filter(!source %in% c("CDC NSSP", "Epic Cosmos"))
+      filter(!source %in% c("CDC NSSP", "Epic Cosmos",'CDC NHSN',"Delphi Doctor Claims","Delphi Hospital Claims"))
   ) %>%
   arrange(geography, outcome_label1, source, date) %>%
   mutate(
@@ -441,7 +441,7 @@ national_popwgted_avg_flu <- combined_file_flu %>%
 combined_file_flu_addavg <- combined_file_flu %>%
   rbind(
     national_popwgted_avg_flu %>%
-      filter(!source %in% c("CDC NSSP", "Epic Cosmos"))
+      filter(!source %in% c("CDC NSSP", "Epic Cosmos",'CDC NHSN',"Delphi Doctor Claims","Delphi Hospital Claims"))
   ) %>%
   arrange(geography, outcome_label1, source, date) %>%
   mutate(
@@ -569,7 +569,7 @@ national_popwgted_avg_covid <- combined_file_covid %>%
 combined_file_covid_addavg <- combined_file_covid %>%
   rbind(
     national_popwgted_avg_covid %>%
-      filter(!source %in% c("CDC NSSP", "Epic Cosmos"))
+      filter(!source %in% c("CDC NSSP", "Epic Cosmos",'CDC NHSN',"Delphi Doctor Claims","Delphi Hospital Claims"))
   ) %>%
   arrange(geography, outcome_label1, source, date) %>%
   mutate(
