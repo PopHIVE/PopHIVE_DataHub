@@ -630,16 +630,37 @@ for (file in files) {
 #combined file
 
 school_vax <- read.csv(paste0(base_dir, "childhood_immunizations/state_kg_school_vax_view.csv")) %>%
-  mutate(age = 5,
+  filter(value!='NReq') %>%
+  mutate(age = '5 years',
          vaccine = if_else(vax== 'polio', 'Polio',
                            if_else(vax== 'dtap', 'DTaP',
                                    if_else(vax== 'varicella', 'Varicella',
                                            if_else(vax== 'hep_b', 'Hep B', 
-                                                   NA_character_))))
+                                                   if_else(vax== 'mmr', 'MMR', 
+                                                   NA_character_))))),
+       #  time = paste(substr(year,1,4),'09','01', sep='-') #set date to start of academic year (Sept 1,YYYY)
+         year = substr(year,1,4),
+         value = as.numeric(value)
          ) %>%
+  rename(sample_size = N) %>%
+  dplyr::select(year, geography, age, vaccine, value, sample_size, percent_surveyed, survey_type) %>%
+  mutate(source = 'CDC SchoolVaxView') %>%
+  filter(year>=2016)
   
-vax_age
+vax_age2 <- vax_age %>%
+  mutate( age_months = if_else(grepl('Month', age), as.numeric(gsub("\\D", "", age)),
+                               if_else(grepl('Day',age),0, 
+                                       NA_real_)),
+          age_days = age_months * (365/12), 
+          time= as.Date(paste(birth_year,'01','01', sep='-')) + age_days,
+          year= as.character(year(time))
+  ) %>%
+  dplyr::select(year, geography,vaccine, age,value, value_lcl, value_ucl, sample_size )%>%
+  mutate(source = 'CDC NIS')
 
+combo_school_NIS <- bind_rows(vax_age2, school_vax)
+
+log_write(combo_school_NIS, "./Data/Webslim/childhood_immunizations/overall_rates_by_source.csv")
 
 ############################################################
 #Compare Epic Cosmos ( 1dose), NIS (1+ doses),and Epic (1+ dose)
