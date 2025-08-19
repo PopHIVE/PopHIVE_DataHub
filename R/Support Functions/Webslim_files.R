@@ -660,7 +660,7 @@ vax_age2 <- vax_age %>%
 
 combo_school_NIS <- bind_rows(vax_age2, school_vax)
 
-log_write(combo_school_NIS, "./Data/Webslim/childhood_immunizations/overall_rates_by_source.csv")
+log_write(combo_school_NIS, "./Data/Webslim/childhood_immunizations/overall_rates_by_source.parquet")
 
 ############################################################
 #Compare Epic Cosmos ( 1dose), NIS (1+ doses),and Epic (1+ dose)
