@@ -627,6 +627,20 @@ for (file in files) {
   log_write(data, paste0("./Data/Webslim/", sub("csv$", "parquet", file)))
 }
 
+#combined file
+
+school_vax <- read.csv(paste0(base_dir, "childhood_immunizations/state_kg_school_vax_view.csv")) %>%
+  mutate(age = 5,
+         vaccine = if_else(vax== 'polio', 'Polio',
+                           if_else(vax== 'dtap', 'DTaP',
+                                   if_else(vax== 'varicella', 'Varicella',
+                                           if_else(vax== 'hep_b', 'Hep B', 
+                                                   NA_character_))))
+         ) %>%
+  
+vax_age
+
+
 ############################################################
 #Compare Epic Cosmos ( 1dose), NIS (1+ doses),and Epic (1+ dose)
 vaxview <- read_parquet(
