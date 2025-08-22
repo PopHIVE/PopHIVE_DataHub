@@ -645,7 +645,9 @@ school_vax <- read.csv(paste0(base_dir, "childhood_immunizations/state_kg_school
   rename(sample_size = N) %>%
   dplyr::select(year, geography, age, vaccine, value, sample_size, percent_surveyed, survey_type) %>%
   mutate(source = 'CDC SchoolVaxView') %>%
-  filter(year>=2016)
+  filter(year>=2016)%>%
+  distinct()
+
   
 vax_age2 <- vax_age %>%
   mutate( age_months = if_else(grepl('Month', age), as.numeric(gsub("\\D", "", age)),
@@ -658,7 +660,7 @@ vax_age2 <- vax_age %>%
   dplyr::select(year, geography,vaccine, age,value, value_lcl, value_ucl, sample_size )%>%
   mutate(source = 'CDC NIS')
 
-combo_school_NIS <- bind_rows(vax_age2, school_vax)
+combo_school_NIS <- bind_rows(vax_age2, school_vax) 
 
 log_write(combo_school_NIS, "./Data/Webslim/childhood_immunizations/overall_rates_by_source.parquet")
 
