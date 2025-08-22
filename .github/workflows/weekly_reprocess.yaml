@@ -18,6 +18,8 @@ jobs:
       - uses: r-lib/actions/setup-renv@v2
       - run: |
           Rscript R/CleanAndHarmonize.R
+        env:
+          DELPHI_EPIDATA_KEY: ${{ secrets.DELPHI_EPIDATA_KEY }}
       - run: |
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
