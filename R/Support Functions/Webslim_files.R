@@ -646,7 +646,8 @@ school_vax <- read.csv(paste0(base_dir, "childhood_immunizations/state_kg_school
   dplyr::select(year, geography, age, vaccine, value, sample_size, percent_surveyed, survey_type) %>%
   mutate(source = 'CDC SchoolVaxView') %>%
   filter(year>=2016)%>%
-  distinct()
+  distinct() %>%
+  filter(geography %in% c(state.name, 'District of Columbia','United States'))
 
   
 vax_age2 <- vax_age %>%
@@ -673,7 +674,9 @@ vaxview <- read_parquet(
   rename(value_vaxview = value,
          vaxview_survey_type = survey_type) %>%
   dplyr::select(value_vaxview, geography,vaxview_survey_type) %>%
-  mutate(value_vaxview = as.numeric(value_vaxview))
+  mutate(value_vaxview = as.numeric(value_vaxview)) %>%
+  distinct() %>%
+  filter(geography %in% c(state.name, 'District of Columbia','United States'))
 
 nis <- read_parquet(
   './Data/Webslim/childhood_immunizations/overall_rates.parquet'
