@@ -33,14 +33,19 @@ vax1 <- a1 %>%
                         'dtap',
                         if_else(vaccine == "hepatitis b", 'hep_b', vax)
                 ),
-                grade = 'Kindergarten'
+                grade = 'Kindergarten',
+                vax = if_else(
+                  grepl('1 dose', dose), NA_character_, vax  #removes the 1 dose varicella category
+                )
         ) %>%
+          filter(vax != '') %>%
         rename(
                 year = year_season,
                 N = population_sample_size,
                 value = coverage_estimate
         ) %>%
-        dplyr::select(year, geography, grade, N, vax, value, percent_surveyed, survey_type)
+        dplyr::select(year, geography, grade, N, vax, value, percent_surveyed, survey_type) 
+      
 
 
 exemptions <- vax1 %>%
