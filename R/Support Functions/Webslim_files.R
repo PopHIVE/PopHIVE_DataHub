@@ -654,7 +654,7 @@ vax_age2 <- vax_age %>%
   mutate( age_months = if_else(grepl('Month', age), as.numeric(gsub("\\D", "", age)),
                                if_else(grepl('Day',age),0, 
                                        NA_real_)),
-          age_days = age_months * (365/12), 
+          age_days = age_months * (365/12) +2, 
           time= as.Date(paste(birth_year,'01','01', sep='-')) + age_days,
           year= as.character(year(time))
   ) %>%
