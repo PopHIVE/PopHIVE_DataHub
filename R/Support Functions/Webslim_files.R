@@ -119,7 +119,7 @@ epic_ed_combo_rsv <- vroom::vroom('https://github.com/PopHIVE/Ingest/raw/refs/he
           geography = cdlTools::fips(fips, to='Name'),
           geography = if_else(fips=='00', 'United States', geography),
           suppressed_flag = if_else(epic_n_rsv ==5,1,0),
-          source = 'Epic Cosmos, ED'
+          source = 'Epic Cosmos'
   ) %>%
   group_by(geography, age) %>%
   mutate(   value_smooth = zoo::rollapplyr(
