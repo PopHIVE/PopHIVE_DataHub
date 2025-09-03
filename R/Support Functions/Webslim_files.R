@@ -4,7 +4,6 @@
 library(tidyverse)
 library(arrow)
 library(sf)
-library(cdlTools)
 base_dir <- './Data/Plot Files/'
 
 log_file <- "./Data/Webslim/file_log.json"
@@ -93,57 +92,22 @@ log_write(
 # plotly::ggplotly(p1)
 
 ##RSV Cosmos age and RSV-Net by age
-# epic_ed_combo_rsv <- read_csv(paste0(
-#   base_dir,
-#   'Cosmos ED/rsv_flu_covid_epic_cosmos_age_state.csv'
-# )) %>%
-#   mutate(source = "Epic Cosmos (ED)") %>%
-#   filter(outcome_name == 'RSV') %>%
-#   dplyr::select(
-#     date,
-#     geography,
-#     age_level,
-#     source,
-#     suppressed_flag,
-#     Outcome_value1,
-#     Outcome_value2
-#   ) %>%
-#   rename(value = Outcome_value1, value_smooth = Outcome_value2, age = age_level)
-# 
-
-epic_ed_combo_rsv <- vroom::vroom('https://github.com/PopHIVE/Ingest/raw/refs/heads/main/data/epic/standard/weekly.csv.gz') %>%
-  rename(fips = geography, date=time) %>%
-  filter(!is.na(epic_n_all_encounters) & !is.na(age)) %>%
-  arrange(fips, age, date) %>%
-  mutate( value  = 100* epic_n_rsv/epic_n_all_encounters,
-          geography = cdlTools::fips(fips, to='Name'),
-          geography = if_else(fips=='00', 'United States', geography),
-          suppressed_flag = if_else(epic_n_rsv ==5,1,0),
-          source = 'Epic Cosmos'
-  ) %>%
-  group_by(geography, age) %>%
-  mutate(   value_smooth = zoo::rollapplyr(
-    value,
-    3,
-    mean,
-    partial = T,
-    na.rm = T
-  )   ) %>%
-  ungroup() %>%
+epic_ed_combo_rsv <- read_csv(paste0(
+  base_dir,
+  'Cosmos ED/rsv_flu_covid_epic_cosmos_age_state.csv'
+)) %>%
+  mutate(source = "Epic Cosmos (ED)") %>%
+  filter(outcome_name == 'RSV') %>%
   dplyr::select(
     date,
     geography,
-    age,
+    age_level,
     source,
     suppressed_flag,
-    value,
-    value_smooth
-  )
-
-# epic_ed_combo_rsv %>%
-#   filter(geography=='United States' & age=='Total') %>%
-#   ggplot(aes(x=date, y=value_smooth)) +
-#   geom_line()
+    Outcome_value1,
+    Outcome_value2
+  ) %>%
+  rename(value = Outcome_value1, value_smooth = Outcome_value2, age = age_level)
 
 rsvnet_age <- read_csv(paste0(
   base_dir,
