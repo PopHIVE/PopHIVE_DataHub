@@ -4,6 +4,7 @@
 library(tidyverse)
 library(arrow)
 library(sf)
+library(cdlTools)
 base_dir <- './Data/Plot Files/'
 
 log_file <- "./Data/Webslim/file_log.json"
@@ -77,7 +78,7 @@ rsv_all_indicators_state <- read_csv(paste0(
     value = if_else(source=="Epic Cosmos, ED" & geography=='Alaska', NA_real_, value ),
     value_smooth = if_else(source=="Epic Cosmos, ED" & geography=='Alaska', NA_real_, value_smooth )
     
-      )
+  )
 
 log_write(
   rsv_all_indicators_state,
@@ -92,22 +93,57 @@ log_write(
 # plotly::ggplotly(p1)
 
 ##RSV Cosmos age and RSV-Net by age
-epic_ed_combo_rsv <- read_csv(paste0(
-  base_dir,
-  'Cosmos ED/rsv_flu_covid_epic_cosmos_age_state.csv'
-)) %>%
-  mutate(source = "Epic Cosmos (ED)") %>%
-  filter(outcome_name == 'RSV') %>%
+# epic_ed_combo_rsv <- read_csv(paste0(
+#   base_dir,
+#   'Cosmos ED/rsv_flu_covid_epic_cosmos_age_state.csv'
+# )) %>%
+#   mutate(source = "Epic Cosmos (ED)") %>%
+#   filter(outcome_name == 'RSV') %>%
+#   dplyr::select(
+#     date,
+#     geography,
+#     age_level,
+#     source,
+#     suppressed_flag,
+#     Outcome_value1,
+#     Outcome_value2
+#   ) %>%
+#   rename(value = Outcome_value1, value_smooth = Outcome_value2, age = age_level)
+# 
+
+epic_ed_combo_rsv <- vroom::vroom('https://github.com/PopHIVE/Ingest/raw/refs/heads/main/data/epic/standard/weekly.csv.gz') %>%
+  rename(fips = geography, date=time) %>%
+  filter(!is.na(epic_n_all_encounters) & !is.na(age)) %>%
+  arrange(fips, age, date) %>%
+  mutate( value  = 100* epic_n_rsv/epic_n_all_encounters,
+          geography = cdlTools::fips(fips, to='Name'),
+          geography = if_else(fips=='00', 'United States', geography),
+          suppressed_flag = if_else(epic_n_rsv ==5,1,0),
+          source = 'Epic Cosmos'
+  ) %>%
+  group_by(geography, age) %>%
+  mutate(   value_smooth = zoo::rollapplyr(
+    value,
+    3,
+    mean,
+    partial = T,
+    na.rm = T
+  )   ) %>%
+  ungroup() %>%
   dplyr::select(
     date,
     geography,
-    age_level,
+    age,
     source,
     suppressed_flag,
-    Outcome_value1,
-    Outcome_value2
-  ) %>%
-  rename(value = Outcome_value1, value_smooth = Outcome_value2, age = age_level)
+    value,
+    value_smooth
+  )
+
+# epic_ed_combo_rsv %>%
+#   filter(geography=='United States' & age=='Total') %>%
+#   ggplot(aes(x=date, y=value_smooth)) +
+#   geom_line()
 
 rsvnet_age <- read_csv(paste0(
   base_dir,
@@ -166,9 +202,9 @@ rsv_testing <- read_csv(paste0(
 )) %>%
   rename(age=age_level,
          value=Outcome_value1,
-         ) %>%
+  ) %>%
   mutate( source = "Epic Cosmos, ED"
-        ) %>%
+  ) %>%
   dplyr::select(
     source,
     age,
@@ -267,7 +303,7 @@ flu_county <- read_csv(paste0(
   'Cosmos ED/rsv_flu_covid_county_filled_map_nssp.csv'
 )) %>%
   mutate(source = 'CDC NSSP'
-         ) %>%
+  ) %>%
   dplyr::select(source, fips, week_end, percent_visits_flu)
 
 log_write(
@@ -307,7 +343,7 @@ covid_all_indicators_state <- read_csv(paste0(
          value = if_else(source=="Epic Cosmos, ED" & geography=='Alaska', NA_real_, value ),
          value_smooth = if_else(source=="Epic Cosmos, ED" & geography=='Alaska', NA_real_, value_smooth )
          
-         )
+  )
 
 log_write(
   covid_all_indicators_state,
@@ -364,7 +400,7 @@ covid_county <- read_csv(paste0(
   'Cosmos ED/rsv_flu_covid_county_filled_map_nssp.csv'
 )) %>%
   mutate( source = 'CDC NSSP'
-    
+          
   )%>%
   dplyr::select(source, fips, week_end, percent_visits_covid)
 
@@ -455,23 +491,23 @@ vax_age <- read_parquet(
     Geography %in%
       c(state.name, 'District of Columbia', 'United States') &
       birth_year %in%
-        c(
-          '2011',
-          '2012',
-          '2013',
-          '2014',
-          '2015',
-          '2016',
-          '2017',
-          '2018',
-          '2019',
-          '2020',
-          '2021',
-          '2022',
-          '2023',
-          '2024',
-          '2025'
-        ) &
+      c(
+        '2011',
+        '2012',
+        '2013',
+        '2014',
+        '2015',
+        '2016',
+        '2017',
+        '2018',
+        '2019',
+        '2020',
+        '2021',
+        '2022',
+        '2023',
+        '2024',
+        '2025'
+      ) &
       dim1 == 'Age'
   ) %>%
   mutate(
@@ -637,11 +673,11 @@ school_vax <- read.csv(paste0(base_dir, "childhood_immunizations/state_kg_school
                                    if_else(vax== 'varicella', 'Varicella',
                                            if_else(vax== 'hep_b', 'Hep B', 
                                                    if_else(vax== 'mmr', 'MMR', 
-                                                   NA_character_))))),
-       #  time = paste(substr(year,1,4),'09','01', sep='-') #set date to start of academic year (Sept 1,YYYY)
+                                                           NA_character_))))),
+         #  time = paste(substr(year,1,4),'09','01', sep='-') #set date to start of academic year (Sept 1,YYYY)
          year = substr(year,1,4),
          value = as.numeric(value)
-         ) %>%
+  ) %>%
   rename(sample_size = N) %>%
   dplyr::select(year, geography, age, vaccine, value, sample_size, percent_surveyed, survey_type) %>%
   mutate(source = 'CDC SchoolVaxView') %>%
@@ -649,7 +685,7 @@ school_vax <- read.csv(paste0(base_dir, "childhood_immunizations/state_kg_school
   distinct() %>%
   filter(geography %in% c(state.name, 'District of Columbia','United States'))
 
-  
+
 vax_age2 <- vax_age %>%
   mutate( age_months = if_else(grepl('Month', age), as.numeric(gsub("\\D", "", age)),
                                if_else(grepl('Day',age),0, 
@@ -695,7 +731,7 @@ vax_epic <- read_parquet(
   rename(value_epic = value,
          N_patients_epic = N_patients) %>%
   mutate(N_patients_epic = as.numeric(N_patients_epic)
-         ) %>%
+  ) %>%
   filter(age == '3-4 Years') %>%
   dplyr::select(value_epic, geography,N_patients_epic)
 
