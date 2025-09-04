@@ -50,21 +50,45 @@ lapply(list.files('./R/Data Pull/', full.names = T), function(X) {
 # Prepare Epic ED files for plots
 #######################################
 
-epic_ed_rsv_flu_covid <- open_dataset(
-  './Data/Plot Files/Cosmos ED/flu_rsv_covid_epic_cosmos_ed.parquet'
-) %>%
-  collect()
+# epic_ed_rsv_flu_covid <- open_dataset(
+#   './Data/Plot Files/Cosmos ED/flu_rsv_covid_epic_cosmos_ed.parquet'
+# ) %>%
+#   collect()
+# 
+# e1 <- epic_ed_rsv_flu_covid %>%
+#   mutate(geography = if_else(geography == 'Total', 'United States', geography))
+# 
+#e1_ref <- e1
+# e1 %>%
+#   write.csv(
+#     .,
+#     './Data/Plot Files/Cosmos ED/rsv_flu_covid_epic_cosmos_age_state.csv'
+#   )
 
-e1 <- epic_ed_rsv_flu_covid %>%
-  mutate(geography = if_else(geography == 'Total', 'United States', geography))
+epic_ed_flu <- read_parquet('https://github.com/PopHIVE/Ingest/raw/refs/heads/main/data/bundle_respiratory/dist/flu_trends_by_age.parquet') %>%
+  filter(source=='Epic Cosmos (ED)') %>%
+  mutate(outcome_name='FLU')
+
+epic_ed_rsv <- read_parquet('https://github.com/PopHIVE/Ingest/raw/refs/heads/main/data/bundle_respiratory/dist/rsv_trends_by_age.parquet') %>%
+  filter(source=='Epic Cosmos (ED)') %>%
+  mutate(outcome_name = 'RSV')
+
+epic_ed_covid <- read_parquet('https://github.com/PopHIVE/Ingest/raw/refs/heads/main/data/bundle_respiratory/dist/covid_trends_by_age.parquet') %>%
+  filter(source=='Epic Cosmos (ED)')  %>%
+  mutate(outcome_name = 'COVID')
+
+e1 <- bind_rows(epic_ed_flu,epic_ed_rsv,epic_ed_covid) %>%
+  dplyr::select(date, geography, age, source, outcome_name,value_smooth,value_smooth_scale,suppressed_flag, value) %>%
+  rename(age_level = age,
+         Outcome_value1 = value
+         ) %>%
+  mutate(source = 'Epic Cosmos')
 
 e1 %>%
   write.csv(
     .,
     './Data/Plot Files/Cosmos ED/rsv_flu_covid_epic_cosmos_age_state.csv'
   )
-
-
 ####################################################################
 # prepare population size estimate
 ####################################################################
@@ -273,10 +297,6 @@ national_popwgted_avg_rsv <- combined_file_rsv %>%
   )) %>%
   mutate(across(
     c(
-      "Outcome_value2",
-      "Outcome_value3",
-      "Outcome_value4",
-      "Outcome_value5",
       "search_volume",
       "search_volume_vax",
       "rsv_novax2",
@@ -408,10 +428,6 @@ national_popwgted_avg_flu <- combined_file_flu %>%
   )) %>%
   mutate(across(
     c(
-      "Outcome_value2",
-      "Outcome_value3",
-      "Outcome_value4",
-      "Outcome_value5",
       "outcome_3m",
       "outcome_3m_scale"
     ),
@@ -537,10 +553,6 @@ national_popwgted_avg_covid <- combined_file_covid %>%
   )) %>%
   mutate(across(
     c(
-      "Outcome_value2",
-      "Outcome_value3",
-      "Outcome_value4",
-      "Outcome_value5",
       "outcome_3m",
       "outcome_3m_scale"
     ),

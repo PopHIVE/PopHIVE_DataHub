@@ -237,12 +237,12 @@ flu_all_indicators_state <- read_csv(paste0(
     source,
     suppressed_flag,
     Outcome_value1,
-    Outcome_value2,
+    outcome_3m,
     outcome_3m_scale
   ) %>% #note this is RAW data; needs 3 week ave and scaling for plot
   rename(
     value = Outcome_value1,
-    value_smooth = Outcome_value2,
+    value_smooth = outcome_3m,
     value_smooth_scale = outcome_3m_scale
   ) %>%
   mutate(source = if_else(source == "Epic Cosmos", "Epic Cosmos, ED", source),
@@ -276,11 +276,10 @@ epic_ed_combo_flu <- read_csv(paste0(
     source,
     suppressed_flag,
     Outcome_value1,
-    Outcome_value2
+    value_smooth
   ) %>%
   rename(
     value = Outcome_value1,
-    value_smooth = Outcome_value2,
     age = age_level
   ) %>%
   group_by(geography, age, source) %>%
@@ -330,12 +329,12 @@ covid_all_indicators_state <- read_csv(paste0(
     source,
     suppressed_flag,
     Outcome_value1,
-    Outcome_value2,
+    outcome_3m,
     outcome_3m_scale
   ) %>% #note this is RAW data; needs 3 week ave and scaling for plot
   rename(
     value = Outcome_value1,
-    value_smooth = Outcome_value2,
+    value_smooth = outcome_3m,
     value_smooth_scale = outcome_3m_scale
   ) %>%
   mutate(source = if_else(source == "Epic Cosmos", "Epic Cosmos, ED", source),
@@ -371,13 +370,10 @@ epic_ed_combo_covid <- read_csv(paste0(
     source,
     suppressed_flag,
     Outcome_value1,
-    Outcome_value2,
-    Outcome_value3
+    value_smooth
   ) %>%
   rename(
     value = Outcome_value1,
-    value_smooth = Outcome_value2,
-    value_smooth_scale=Outcome_value3,
     age = age_level
   ) %>%
   group_by(geography, age, source) %>%
