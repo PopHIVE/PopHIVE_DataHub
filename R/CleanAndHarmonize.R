@@ -82,13 +82,20 @@ e1 <- bind_rows(epic_ed_flu,epic_ed_rsv,epic_ed_covid) %>%
   rename(age_level = age,
          Outcome_value1 = value
          ) %>%
-  mutate(source = 'Epic Cosmos')
+  mutate(source = 'Epic Cosmos',
+         age_strata = if_else(age_level=='Total', 'none', 'age')
+  )
 
 e1 %>%
   write.csv(
     .,
     './Data/Plot Files/Cosmos ED/rsv_flu_covid_epic_cosmos_age_state.csv'
   )
+
+# e1 %>%
+#   filter(age_level=='Total' & geography=='New York' & outcome_name=='RSV') %>%
+#   ggplot(aes(x=date, y= Outcome_value1))+
+#   geom_line()
 ####################################################################
 # prepare population size estimate
 ####################################################################
@@ -850,8 +857,7 @@ write.csv(
 # read in RESPNET hosp data from "Plot Files" folder
 rsv_respnet_hosp_age <- read.csv(
   "./Data/Plot Files/RESP-NET Programs/rsv_hosp_age_respnet.csv"
-) %>%
-  dplyr::select(-X)
+)
 
 # calculate national average
 rsv_respnet_hosp_age_avg <- rsv_respnet_hosp_age %>%
