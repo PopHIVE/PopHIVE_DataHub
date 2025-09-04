@@ -86,11 +86,11 @@ log_write(
 )
 
 
-p1 <- rsv_all_indicators_state %>%
-  filter(geography=='New York') %>%
-  ggplot(aes(x=date, y=value_smooth_scale, group=source, color=source)) +
-  geom_line()
-plotly::ggplotly(p1)
+# p1 <- covid_all_indicators_state %>%
+#   filter(geography=='New York') %>%
+#   ggplot(aes(x=date, y=value_smooth_scale, group=source, color=source)) +
+#   geom_line()
+# plotly::ggplotly(p1)
 
 ##RSV Cosmos age and RSV-Net by age
 # epic_ed_combo_rsv <- read_csv(paste0(
