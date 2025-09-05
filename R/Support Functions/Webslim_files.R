@@ -4,6 +4,7 @@
 library(tidyverse)
 library(arrow)
 library(sf)
+library(tidyr)
 library(cdlTools)
 base_dir <- './Data/Plot Files/'
 
@@ -419,7 +420,8 @@ ipd_serotype_age <- read_csv(paste0(
 )) %>%
   dplyr::select(st, agec2, year, N_IPD) %>%
   mutate(agec2 = gsub('year', 'Year', agec2)) %>%
-  rename(serotype = st, age = agec2, value = N_IPD)
+  rename(serotype = st, age = agec2, value = N_IPD) %>%
+  tidyr::complete(serotype,age,year, fill=list(value=0))
 
 log_write(
   ipd_serotype_age,
