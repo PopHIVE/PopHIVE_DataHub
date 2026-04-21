@@ -1,3 +1,6 @@
+# This repository is no longer being updated. For the latest data please go to https://github.com/PopHIVE/Ingest
+
+
 ## Using these data
 
 The data shown on PopHIVE.org are found in ./Data/Webslim/. These files are mostly stored in parquet format. If using R, these can be downloaded using the arrow package in R. For example:
