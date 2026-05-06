@@ -2,7 +2,7 @@
 
 ## Overview
 
-Enclosed is the code used to pull in data updates, process, and serve webslim versions used on [PopHIVE.org](https://www.pophive.org/). This repository includes the legacy code used for regularly interacting with APIs and scripts used to prepare the data for visualization on the website.
+Enclosed is the code used to pull data updates, process them, and serve lightweight versions for use on [PopHIVE.org](https://www.pophive.org/). This repository includes the legacy code for regularly interacting with APIs and scripts used to prepare data for visualization on the website.
 
 The code was originally copied from a repository in the [YSPH Data Science and Data Equity](https://github.com/ysph-dsde) (YSPH-DSDE) GitHub Organization and was copied into the [PopHIVE](https://github.com/PopHIVE) GitHub Organization May 6th, 2026. At the time of transfer, the YSPH-DSDE GitHub Organization codebase was no longer being actively contributed to and had been archived.
 
