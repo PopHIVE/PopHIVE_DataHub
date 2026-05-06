@@ -1,5 +1,14 @@
-# This repository is no longer being updated. For the latest data please go to https://github.com/PopHIVE/Ingest
+![Static Badge](https://img.shields.io/badge/Activity_Status-Archived-red)
 
+## Overview
+
+Enclosed is the code used to pull in data updates, process, and serve webslim versions used on [PopHIVE.org](https://www.pophive.org/). This repository includes the legacy code used for regularly interacting with APIs and scripts used to prepare the data for visualization on the website.
+
+The code was originally copied from a repository in the [YSPH Data Science and Data Equity](https://github.com/ysph-dsde) (YSPH-DSDE) GitHub Organization and was copied into the [PopHIVE](https://github.com/PopHIVE) GitHub Organization May 6th, 2026. At the time of transfer, the YSPH-DSDE GitHub Organization codebase was no longer being actively contributed to and had been archived.
+
+The replacement codebase can be found [here](https://github.com/PopHIVE/Ingest).
+
+**Dates active:** Feb 28th, 2025 – Apr 21st, 2026
 
 ## Using these data
 
